@@ -18,7 +18,7 @@ export class AmoService implements IAmoService {
     this.amoAccounts = {};
   }
 
-  async create(amoId): Promise<any> {
+  async create(amoId): Promise<Amo> {
     if (!!this.amoAccounts[amoId]) return this.amoAccounts[amoId];
     const cred = await this.amoConnectOptions.getCredentials(amoId);
     const amo = new Amo(
@@ -41,7 +41,7 @@ export class AmoService implements IAmoService {
     code: string,
     referer: string,
     on_token?: (token: OAuth) => void | Promise<void>,
-  ) {
+  ): Promise<Amo> {
     const settings = await this.amoConnectOptions.widget_settings;
     const amo = new Amo(
       referer,
