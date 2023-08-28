@@ -38,7 +38,7 @@ import { MailgunModule } from 'nestjs-mailgun';
   imports: [
     MailgunModule.forAsyncRoot({
       useFactory: async () => {
-        return {	
+				return {
 					widget_settings: {
 						client_id: '1111-1111-1111-1111', // From widget settings
 						client_secret: 'secret from amoCRM settings', // From widget settings
@@ -60,7 +60,9 @@ import { MailgunModule } from 'nestjs-mailgun';
 					},
 				};
       },
-			imports: [], // Here you can import the desired module to use it in the useFactory function to retrieve or update data from long-term storage
+			// Here you can import the desired module to use it in the 
+			// useFactory function to retrieve or update data from long-term storage
+			imports: [], 
       inject: []
     }),
   ],
