@@ -62,5 +62,21 @@
     },
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
-  }
+  },
+  "types": "./dist/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yatolstoy/nestjs-amo.git"
+  },
+  "keywords": [
+    "nestjs",
+    "amocrm",
+    "kommo",
+    "api",
+    "oauth2.0"
+  ],
+  "bugs": {
+    "url": "https://github.com/yatolstoy/nestjs-amo/issues"
+  },
+  "homepage": "https://github.com/yatolstoy/nestjs-amo#readme"
 }
