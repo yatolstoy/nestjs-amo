@@ -5,12 +5,11 @@ export interface AmoConnectOptions {
     OAuthRefresh,
     'client_id' | 'client_secret' | 'redirect_uri'
   >;
-  getCredentials: (amoId: number) => Pick<
-    OAuth,
-    Exclude<keyof OAuth, 'token_type' | 'expires_in'>
-  > &
-    Partial<Pick<OAuth, 'token_type' | 'expires_in'>> & {
-      domain: string;
-    };
+  getCredentials: (amoId: number) => Promise<
+    Pick<OAuth, Exclude<keyof OAuth, 'token_type' | 'expires_in'>> &
+      Partial<Pick<OAuth, 'token_type' | 'expires_in'>> & {
+        domain: string;
+      }
+  >;
   onTokenUpdate: (amoId: number, token: OAuth) => void | Promise<void>;
 }

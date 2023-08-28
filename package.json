@@ -1,6 +1,6 @@
 {
   "name": "nestjs-amo",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "description": "Wrapper over the @shevernitskiy/amo library for interacting with the amoCRM API from a NestJS application.",
   "main": "dist/index",
   "files": [

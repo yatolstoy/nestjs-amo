@@ -14,11 +14,13 @@ export class AmoService implements IAmoService {
   constructor(
     @Inject(AMO_CONNECT_OPTIONS)
     private readonly amoConnectOptions: AmoConnectOptions,
-  ) {}
+  ) {
+    this.amoAccounts = {};
+  }
 
   async create(amoId): Promise<any> {
     if (!!this.amoAccounts[amoId]) return this.amoAccounts[amoId];
-    const cred = this.amoConnectOptions.getCredentials(amoId);
+    const cred = await this.amoConnectOptions.getCredentials(amoId);
     const amo = new Amo(
       cred.domain,
       {
