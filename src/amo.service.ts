@@ -31,6 +31,7 @@ export class AmoService implements IAmoService {
       },
       {
         on_token: (token) => this.amoConnectOptions.onTokenUpdate(amoId, token),
+        request_delay: this.amoConnectOptions.request_delay,
       },
     );
     this.amoAccounts[amoId] = amo;

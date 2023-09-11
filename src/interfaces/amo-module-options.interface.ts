@@ -12,4 +12,5 @@ export interface AmoConnectOptions {
       }
   >;
   onTokenUpdate: (amoId: number, token: OAuth) => void | Promise<void>;
+  request_delay?: number;
 }
