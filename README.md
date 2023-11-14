@@ -33,10 +33,11 @@ yarn add nestjs-amo
 #### Importing module Async
 
 ```typescript
-import { MailgunModule } from 'nestjs-mailgun';
+import { AmoModule } from 'nestjs-amo-api';
+
 @Module({
   imports: [
-    MailgunModule.forAsyncRoot({
+    AmoModule.forAsyncRoot({
       useFactory: async () => {
 				return {
 					widget_settings: {
@@ -69,7 +70,7 @@ import { MailgunModule } from 'nestjs-mailgun';
   providers: [],
   exports: [],
 })
-export class YourModule {}
+export class AppModule {}
 ```
 
 #### Calling Send Method
