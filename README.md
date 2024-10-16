@@ -34,6 +34,18 @@ npm install nestjs-amo
 yarn add nestjs-amo
 ```
 
+Furthermore, install
+[@shevernitskiy/amo](https://www.npmjs.com/package/@shevernitskiy/amo) in your
+NestJS application, if you haven't already.
+
+```sh
+# npm
+npm install @shevernitskiy/amo
+
+# yarn
+yarn add @shevernitskiy/amo
+```
+
 ### Usage
 
 Add `AmoModule` to the `imports` section in your `AppModule` or other modules to
