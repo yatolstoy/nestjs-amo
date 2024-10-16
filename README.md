@@ -6,7 +6,7 @@
   </a>
 </div>
 
-<h3 align="center">NestJS AmoCRM</h3>
+<h3 align="center">nestjs-amo</h3>
 <a href="https://www.npmjs.com/package/nestjs-nestjs-amo"><img src="https://img.shields.io/npm/v/nestjs-amo.svg" alt="NPM Version" /></a>
 <a href="https://www.npmjs.com/nestjs-amo"><img src="https://img.shields.io/npm/l/nestjs-amo.svg" alt="Package License" /></a>
 <a href="https://www.npmjs.com/nestjs-amo"><img src="https://img.shields.io/npm/dm/nestjs-amo.svg" alt="NPM Downloads" /></a>
@@ -19,94 +19,150 @@
 
 ### Introduction
 
-This is a simple wrapper of [Amo](https://www.npmjs.com/package/@shevernitskiy/amo) libruary.
-With this module you can interacting with the amoCRM/Kommo API from a NestJS application.
+This is a simple wrapper of
+[@shevernitskiy/amo](https://www.npmjs.com/package/@shevernitskiy/amo) library.
+With this module you can interact with the amoCRM/Kommo API from a NestJS
+application.
 
 ### Installation
 
 ```bash
+# npm
+npm install nestjs-amo
+
+# yarn
 yarn add nestjs-amo
 ```
 
 ### Usage
 
-#### Importing module Async
+Add `AmoModule` to the `imports` section in your `AppModule` or other modules to
+gain access to `AmoService`.
 
-```typescript
-import { AmoModule } from 'nestjs-amo-api';
+#### Static import
+
+```ts
+import { Module } from "@nestjs/common";
+import { AmoModule } from "nestjs-amo";
 
 @Module({
-  imports: [
-    AmoModule.forAsyncRoot({
-      useFactory: async () => {
-				return {
-					widget_settings: {
-						client_id: '1111-1111-1111-1111', // From widget settings
-						client_secret: 'secret from amoCRM settings', // From widget settings
-						redirect_uri: 'https://example.ru', // From widget settings
-					},
-					getCredentials: (amoId) => {
-						// Implement your logic to retrieve a token from your long-term storage facility
-						return {
-							access_token: 'some token',
-							expires_at: 86400,
-							expires_in: 1693211983,
-							refresh_token: 'saved token',
-							domain: 'https://example.ru',
-						};
-					},
-					onTokenUpdate: async (amoId, token) => {
-						// Implement your logic for saving authorization keys to long-term storage
-						console.log(token);
-					},
-				};
-      },
-			// Here you can import the desired module to use it in the 
-			// useFactory function to retrieve or update data from long-term storage
-			imports: [], 
-      inject: []
-    }),
-  ],
-  providers: [],
-  exports: [],
+	imports: [
+		AmoModule.forRoot({
+			isGlobal: true,
+			amoServiceOptions: {},
+		}),
+	],
 })
 export class AppModule {}
 ```
 
-#### Calling Send Method
+Additionally, `AmoModule` provides a `forRootAsync` to pass options
+asynchronously.
+
+#### Async configuration
+
+```ts
+import { Module } from "@nestjs/common";
+import { AmoModule } from "nestjs-amo";
+
+@Module({
+	imports: [
+		AmoModule.forRootAync({
+			isGlobal: true,
+			useFactory: async () => {
+				return {
+					widget_settings: {
+						client_id: "1111-2222-3333",
+						client_secret: "myclientsecret",
+						redirect_uri: "https://myredirect.org",
+					},
+					getCredentials: (amoId) => {
+						// Implement your logic to retrieve a token from your long-term storage facility
+					},
+					onTokenUpdate: async (amoId, token) => {
+						// Implement your logic for saving authorization keys to long-term storage
+						console.log("New token obtained", amoId, token);
+					},
+				};
+			},
+		}),
+	],
+})
+export class AppModule {}
+```
+
+You can inject dependencies such as `ConfigModule` to load options from .env
+files.
+
+```ts
+import { Module } from "@nestjs/common";
+import { ConfigModule, ConfigService } from "@nestjs/config";
+import { AmoModule } from "nestjs-amo";
+
+@Module({
+	imports: [
+		ConfigModule.forRoot({
+			isGlobal: true,
+		}),
+		AmoModule.forRootAync({
+			isGlobal: true,
+			useFactory: async (configService: ConfigService) => {
+				return {
+					widget_settings: {
+						client_id: configService.get("AMO_CLIENT_ID"),
+						client_secret: configService.get("AMO_CLIENT_SECRET"),
+						redirect_uri: configService.get("AMO_REDIRECT_URI"),
+					},
+					getCredentials: (amoId) => {
+						// Implement your logic to retrieve a token from your long-term storage facility
+					},
+					onTokenUpdate: async (amoId, token) => {
+						// Implement your logic for saving authorization keys to long-term storage
+						console.log("New token obtained", amoId, token);
+					},
+				};
+			},
+			inject: [ConfigService],
+		}),
+	],
+})
+export class AppModule {}
+```
+
+#### Calling send method
 
 ```typescript
-import { AmoService } from 'nestjs-amo-api';
+import { AmoService } from "nestjs-amo";
 
 @Injectable()
 export class YourService {
-  constructor(private amoService: AmoService) {}
+	constructor(private amoService: AmoService) {}
 
 	async method() {
 		const amoApi = await this.amoService.create(123);
-    return amoApi.account.getAccount({ with: ['version'] });
+		return amoApi.account.getAccount({ with: ["version"] });
 	}
 }
 ```
 
-#### Calling Custom endpoint
+#### Calling custom endpoint
 
 ```typescript
-import { AmoService } from 'nestjs-amo-api';
+import { AmoService } from "nestjs-amo";
 
 @Injectable()
 export class YourService {
-  constructor(private amoService: AmoService) {}
+	constructor(private amoService: AmoService) {}
 
 	async method() {
 		const amoApi = await this.amoService.create(123);
-    return amoApi.raw.get({
-      url: '/ajax/merge/leads/save',
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest',
-      },
-      payload: 'some payload',
-    });
+		return amoApi.raw.get({
+			url: "/ajax/merge/leads/save",
+			headers: {
+				"X-Requested-With": "XMLHttpRequest",
+			},
+			payload: "some payload",
+		});
 	}
 }
 ```
@@ -117,11 +173,12 @@ Contributions welcome! See [Contributing](CONTRIBUTING.md).
 
 ## Notes
 
-This project is not endorsed by or affiliated with [AmoCRM](http://www.amocrm.ru).
+This project is not endorsed by or affiliated with
+[AmoCRM](http://www.amocrm.ru).
 
 ## Author
 
-**Yaroslav Tolstoy [Site](https://github.com/yatolstoy)**
+**Yaroslav Tolstoy - [GitHub](https://github.com/yatolstoy)**
 
 ## License
 

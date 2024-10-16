@@ -1,7 +1,7 @@
-import { Injectable, Inject } from '@nestjs/common';
-import { AMO_CONNECT_OPTIONS } from './amo.constants';
+import { Inject, Injectable } from '@nestjs/common';
 import { Amo, OAuth } from '@shevernitskiy/amo';
-import { AmoConnectOptions } from './interfaces';
+import { AMO_SERVICE_OPTIONS } from './amo.constants';
+import { AmoServiceOptions } from './interfaces';
 
 interface IAmoService {
   create(amoId: number): Promise<any>;
@@ -12,26 +12,29 @@ export class AmoService implements IAmoService {
   private amoAccounts: Record<string, Amo>;
 
   constructor(
-    @Inject(AMO_CONNECT_OPTIONS)
-    private readonly amoConnectOptions: AmoConnectOptions,
+    @Inject(AMO_SERVICE_OPTIONS)
+    private readonly amoServiceOptions: AmoServiceOptions,
   ) {
     this.amoAccounts = {};
   }
 
   async create(amoId): Promise<Amo> {
     if (!!this.amoAccounts[amoId]) return this.amoAccounts[amoId];
-    const cred = await this.amoConnectOptions.getCredentials(amoId);
+    const cred = await this.amoServiceOptions.getCredentials(amoId);
     const amo = new Amo(
       cred.domain,
       {
-        ...this.amoConnectOptions.widget_settings,
+        ...this.amoServiceOptions.widget_settings,
         ...cred,
         expires_in: cred.expires_in || 86400,
         token_type: cred.token_type || 'Bearer',
       },
       {
-        on_token: (token) => this.amoConnectOptions.onTokenUpdate(amoId, token),
-        request_delay: this.amoConnectOptions.request_delay,
+        on_token: (token) => this.amoServiceOptions.onTokenUpdate(amoId, token),
+        on_error: (err) => this.amoServiceOptions.onError(amoId, err),
+        request_delay: this.amoServiceOptions.requestDelay,
+        concurrent_request: this.amoServiceOptions.concurrentRequest,
+        concurrent_timeframe: this.amoServiceOptions.concurrentTimeframe,
       },
     );
     this.amoAccounts[amoId] = amo;
@@ -43,7 +46,7 @@ export class AmoService implements IAmoService {
     referer: string,
     on_token?: (token: OAuth) => void | Promise<void>,
   ): Promise<Amo> {
-    const settings = await this.amoConnectOptions.widget_settings;
+    const settings = await this.amoServiceOptions.widget_settings;
     const amo = new Amo(
       referer,
       {

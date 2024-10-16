@@ -1,0 +1,21 @@
+# Ignores TypeScript files, but keeps definitions.
+!*.d.ts
+
+# source
+lib
+package-lock.json
+.prettierrc
+.vscode/
+.github/
+.eslintignore
+.eslintrc.js
+.node-version
+.prettierignore
+
+# misc
+.DS_Store
+
+examples/
+
+# docs
+docs/
