@@ -61,7 +61,27 @@ import { AmoModule } from "nestjs-amo";
 	imports: [
 		AmoModule.forRoot({
 			isGlobal: true,
-			amoServiceOptions: {},
+			amoServiceOptions: {
+				widget_settings: {
+					client_id: "1111-2222-3333",
+					client_secret: "myclientsecret",
+					redirect_uri: "https://myredirect.org",
+				},
+				getCredentials: async (amoId) => {
+					// Implement your logic to retrieve a token from your long-term storage facility
+					return {
+						access_token: "some token",
+						expires_at: 86400,
+						expires_in: 1693211983,
+						refresh_token: "saved token",
+						domain: "https://example.ru",
+					};
+				},
+				onTokenUpdate: async (amoId, token) => {
+					// Implement your logic for saving authorization keys to long-term storage
+					console.log("New token obtained", amoId, token);
+				},
+			},
 		}),
 	],
 })
@@ -88,8 +108,15 @@ import { AmoModule } from "nestjs-amo";
 						client_secret: "myclientsecret",
 						redirect_uri: "https://myredirect.org",
 					},
-					getCredentials: (amoId) => {
+					getCredentials: async (amoId) => {
 						// Implement your logic to retrieve a token from your long-term storage facility
+						return {
+							access_token: "some token",
+							expires_at: 86400,
+							expires_in: 1693211983,
+							refresh_token: "saved token",
+							domain: "https://example.ru",
+						};
 					},
 					onTokenUpdate: async (amoId, token) => {
 						// Implement your logic for saving authorization keys to long-term storage
@@ -125,8 +152,15 @@ import { AmoModule } from "nestjs-amo";
 						client_secret: configService.get("AMO_CLIENT_SECRET"),
 						redirect_uri: configService.get("AMO_REDIRECT_URI"),
 					},
-					getCredentials: (amoId) => {
+					getCredentials: async (amoId) => {
 						// Implement your logic to retrieve a token from your long-term storage facility
+						return {
+							access_token: "some token",
+							expires_at: 86400,
+							expires_in: 1693211983,
+							refresh_token: "saved token",
+							domain: "https://example.ru",
+						};
 					},
 					onTokenUpdate: async (amoId, token) => {
 						// Implement your logic for saving authorization keys to long-term storage
