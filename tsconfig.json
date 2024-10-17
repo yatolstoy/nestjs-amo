@@ -10,8 +10,6 @@
     "sourceMap": true,
     "outDir": "./dist",
     "baseUrl": "./",
-    "incremental": true,
-  },
-  "include": ["lib/**/*"],
-  "exclude": ["node_modules", "dist", "test", "**/*spec.ts"]
+    "incremental": true
+  }
 }
