@@ -10,7 +10,7 @@ import {
 
 export interface AmoModuleOptions {
   /**
-   * If "true", registers `PrismaModule` as a global module.
+   * If "true", registers `AmoModule` as a global module.
    * See: https://docs.nestjs.com/modules#global-modules
    */
   isGlobal?: boolean;
@@ -25,9 +25,9 @@ export interface AmoServiceOptions {
   >;
   getCredentials: (amoId: number) => Promise<
     Pick<OAuth, Exclude<keyof OAuth, 'token_type' | 'expires_in'>> &
-      Partial<Pick<OAuth, 'token_type' | 'expires_in'>> & {
-        domain: string;
-      }
+    Partial<Pick<OAuth, 'token_type' | 'expires_in'>> & {
+      domain: string;
+    }
   >;
   onTokenUpdate: (amoId: number, token: OAuth) => void | Promise<void>;
   onError?: (
