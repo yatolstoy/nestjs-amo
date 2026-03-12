@@ -8,9 +8,11 @@ package-lock.json
 .vscode/
 .github/
 .eslintignore
-.eslintrc.js
+eslint.config.js
 .node-version
 .prettierignore
+.codex/
+*.tsbuildinfo
 
 # misc
 .DS_Store
